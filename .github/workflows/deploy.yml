@@ -16,6 +16,8 @@ jobs:
         # Dazu einfach das definierte Key-Wort angeben
         with: 
           mycaching: false
+      - name: Output information
+        run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
       - name: Lint code
         run: npm run lint
   test:
