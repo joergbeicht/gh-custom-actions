@@ -9,11 +9,13 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Load & cache dependencies
-        id: cache-deps
-        uses: ./.github/actions/cached-deps
-        with:
-          caching: 'false'
+      - name: 'Load and cache Dependencies'
+        # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
+        uses: ./.github/myactions/cached-deps
+        # Ein Bespiel das zeigt, dass man den Cache ausschalten kann aus action.yml!
+        # Dazu einfach das definierte Key-Wort angeben
+        with: 
+          mycaching: false
       - name: Output information
         run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
       - name: Lint code
@@ -23,8 +25,9 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Load & cache dependencies
-        uses: ./.github/actions/cached-deps
+      - name: 'Load and cache Dependencies'
+        # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
+        uses: ./.github/myactions/cached-deps
       - name: Test code
         id: run-tests
         run: npm run test
@@ -40,15 +43,16 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Load & cache dependencies
-        uses: ./.github/actions/cached-deps
+      - name: 'Load and cache Dependencies'
+        # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
+        uses: ./.github/myactions/cached-deps
       - name: Build website
         run: npm run build
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dist-files
-          path: dist
+          path: dist 
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -75,3 +79,11 @@ jobs:
       - name: Output information
         run: |
           echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
+
+#  information:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Get code
+#        uses: actions/checkout@v3
+#      - name: Run custom action
+#        uses: ./.github/myactions/deploy-s3-javascript
