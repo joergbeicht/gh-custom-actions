@@ -1,9 +1,15 @@
 name: 'Get & Cache Dependencies'
 description: 'Get the dependencies (via npm) and cache them.'
+inputs:
+  mycaching;
+    description: 'Whether to cache dependencies or not.'
+    required: true
+    default: 'true'
 runs:
   using: 'composite'
   steps:
     - name: Cache dependencies
+      if: inputs.mycaching == 'true'
       id: cache
       uses: actions/cache@v3
       with:
@@ -11,7 +17,7 @@ runs:
         key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
       # Installiert die Dependencies falls sie nicht im Cache gefunden werden
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache.outputs.cache-hit != 'true' || inputs.mycaching != 'true'
       run: npm ci
       # shell ist ergänzend notwendig, weil das eine custom action ist
       shell: bash

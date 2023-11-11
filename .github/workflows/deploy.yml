@@ -12,6 +12,10 @@ jobs:
       - name: 'Load and cache Dependencies'
         # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
         uses: ./.github/myactions/cached-deps
+        # Ein Bespiel das zeigt, dass man den Cache ausschalten kann aus action.yml!
+        # Dazu einfach das definierte Key-Wort angeben
+        with: 
+          mycaching: false
       - name: Lint code
         run: npm run lint
   test:
