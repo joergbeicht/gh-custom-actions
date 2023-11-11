@@ -10,6 +10,7 @@ runs:
         path: node_modules
         key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
     - name: Install dependencies
+      # Installiert die Dependencies falls sie nicht im Cache gefunden werden
       if: steps.cache.outputs.cache-hit != 'true'
       run: npm ci
       # shell ist ergänzend notwendig, weil das eine custom action ist
