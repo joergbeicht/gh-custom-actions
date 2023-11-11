@@ -9,13 +9,11 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: 'Load and cache Dependencies'
-        # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
-        uses: ./.github/myactions/cached-deps
-        # Ein Bespiel das zeigt, dass man den Cache ausschalten kann aus action.yml!
-        # Dazu einfach das definierte Key-Wort angeben
-        with: 
-          mycaching: false
+      - name: Load & cache dependencies
+        id: cache-deps
+        uses: ./.github/actions/cached-deps
+        with:
+          caching: 'false'
       - name: Output information
         run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
       - name: Lint code
@@ -25,9 +23,8 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: 'Load and cache Dependencies'
-        # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
-        uses: ./.github/myactions/cached-deps
+      - name: Load & cache dependencies
+        uses: ./.github/actions/cached-deps
       - name: Test code
         id: run-tests
         run: npm run test
@@ -43,9 +40,8 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: 'Load and cache Dependencies'
-        # Der Dateiname action.yml darf nicht angegeben werden. Der Name muss aber action.yml heissen!
-        uses: ./.github/myactions/cached-deps
+      - name: Load & cache dependencies
+        uses: ./.github/actions/cached-deps
       - name: Build website
         run: npm run build
       - name: Upload artifacts
@@ -67,20 +63,15 @@ jobs:
       - name: Output contents
         run: ls
       - name: Deploy site
-        uses: ./.github/myactions/deploy-s3-javascript
+        id: deploy
+        uses: ./.github/actions/deploy-s3-javascript
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
-          bucket: gha-custom-action-hosting-jb
-          dist-folder: ./dist          
+          bucket: gha-custom-action-hosting
+          dist-folder: ./dist
+          # bucket-region: us-east-2
       - name: Output information
         run: |
-         echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
-#  information:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Get code
-#        uses: actions/checkout@v3
-#      - name: Run custom action
-#        uses: ./.github/myactions/deploy-s3-javascript
+          echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
