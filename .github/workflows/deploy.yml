@@ -74,7 +74,9 @@ jobs:
         with:
           bucket: gha-custom-action-hosting-jb
           dist-folder: ./dist          
-
+      - name: Output information
+        run: |
+         echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
 #  information:
 #    runs-on: ubuntu-latest
 #    steps:
