@@ -71,7 +71,7 @@ jobs:
         run: ls
       # Variante mit OpenID ist sicherer als AWS_ACCESS_KEY_ID & Co
       - name: Get AWS permissions
-        uses: aws-actions/configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::624446375761:role/GitHubDemo1
           aws-region: us-east-1
